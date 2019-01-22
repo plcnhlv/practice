@@ -1,0 +1,22 @@
+public class PeopleInfo implements java.io.Serializable{
+	String name;
+	String PhoneNumber;
+	String memo;
+	int number=0;
+	
+	public PeopleInfo() {
+		this("Unknown","010-0000-0000","good");
+	}
+	public PeopleInfo(String name,String PhoneNumber,String memo) {
+		this.name=name;
+		this.PhoneNumber=PhoneNumber;
+		this.memo=memo;
+		number++;
+	}
+	public String toString() {
+		return "("+name+","+"PhoneNumber"+","+memo+")";
+	}
+	public void dataset(int number) {
+		this.number=number;
+	}
+}
