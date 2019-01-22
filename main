@@ -28,7 +28,7 @@ public class main {
 				fc.Output();
 				break;
 			case 5:
-				return ;
+				System.exit(0);
 			default:
 					break;
 			}
