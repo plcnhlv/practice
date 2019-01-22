@@ -1,0 +1,40 @@
+import java.util.Scanner;
+
+public class main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		Func fc=new Func();
+		int i=0;
+		while(true) {
+			People people=new People();
+			System.out.println("1.입력 2.수정 3.삭제 4.출력 5.나가기");
+			
+			int select=sc.nextInt();
+			
+			switch(select) {
+			case 1:
+				fc.Input(people);
+				i++;
+				break;
+			case 2:
+				fc.Modify();
+				break;
+			case 3:
+				fc.Delete();
+				break;
+			case 4:
+				fc.Output();
+				break;
+			case 5:
+				return ;
+			default:
+					break;
+			}
+			
+		}
+
+	}
+
+}
