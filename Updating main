@@ -1,0 +1,164 @@
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+public class main {
+	public static void main(String[] args) {
+		final Frame f = new Frame("CardLayoutTest");
+		final CardLayout card = new CardLayout(10,10);
+		//CardLayout Settings end
+		
+		//Basic Settings start
+		TextArea View;
+		Button input,modify,delete,output,exit,confirm;
+		f.setLayout(card);
+		f.addWindowListener(new EventHandler());
+		Panel card1 = new Panel();
+		Panel card2 = new Panel();
+		Panel card3 = new Panel();
+		card3.add(new Label("Card 3"));
+		Panel card4 = new Panel();
+		card4.add(new Label("Card 4"));
+		//Basic Settings end
+		
+		//main menu configure start
+		f.add(card1,"main");
+		f.add(card2,"input");
+		f.add(card3,"Modify");
+		f.add(card4,"Delete");
+		input=new Button("입력");
+		input.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				card.show(f,"input");
+			}
+		});
+		modify=new Button("수정");
+		modify.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				card.show(f,"Modify");
+			}
+		});
+		delete=new Button("삭제");	
+		delete.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				card.show(f,"Delete");
+			}
+		});
+		
+		card1.add(input);
+		card1.add(modify);
+		card1.add(delete);
+		//main menu configure end
+		
+		//input menu configure start
+		
+		
+		Label name=new Label("이름 :");
+		Label number=new Label("전화번호 :");
+		Label memo=new Label("메모: ");
+		
+		TextField inputname=new TextField(10);
+		TextField inputnumber=new TextField(11);
+		TextField inputmemo=new TextField(10);
+		
+		card2.add(name);
+		card2.add(inputname);
+		card2.add(number);
+		card2.add(inputnumber);
+		card2.add(memo);
+		card2.add(inputmemo);
+		confirm=new Button("확인");
+		
+		confirm.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				String Pname=inputname.getText();
+				String Pnumber=inputnumber.getText();
+				String Pmemo=inputmemo.getText();
+				
+				try{
+					int i=0;
+					
+					String filename = "UserInfo.ser";
+					FileOutputStream fos = new FileOutputStream(filename);
+					BufferedOutputStream bos = new BufferedOutputStream(fos);
+					ObjectOutputStream out = new ObjectOutputStream(bos);
+					PeopleInfo Username1 =new PeopleInfo(Pname,Pnumber,Pmemo);
+					
+					ArrayList list=new ArrayList();
+					list.add(Username1);
+					out.writeObject(Username1);
+					out.writeObject(list);
+					out.close();
+					i++;
+					
+					
+				}catch(IOException e1) {
+					e1.printStackTrace();
+				}
+				finally {
+				
+				}
+			}
+		});
+		card2.add(confirm);
+		card.show(f, "main");
+	
+		//input menu configure end
+		
+		
+		
+		//Modify menu configure start
+		
+		
+		
+		//Modify menu configure end
+		
+		//Output menu configure start
+		try {
+			String fileName="UserInfo.ser";
+			FileInputStream fis = new FileInputStream(fileName);
+			BufferedInputStream bis = new BufferedInputStream(fis);
+			ObjectInputStream in = new ObjectInputStream(bis);
+			
+			ArrayList list = (ArrayList)in.readObject();
+			//next day
+			System.out.println(list);
+			in.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	
+		
+		//Output menu configure end
+		
+		/*
+		class Handler extends MouseAdapter{
+			public void mouseClicked(MouseEvent e) {
+				if(e.getModifiers()==e.BUTTON3_MASK) {
+					card.previous(f);
+				}else {
+					card.next(f);
+				}
+			}
+		}
+		card1.addMouseListener(new Handler());
+		card2.addMouseListener(new Handler());
+		card3.addMouseListener(new Handler());
+		*/
+		
+		f.setSize(600,600);
+		f.setLocation(200,200);
+		f.setVisible(true);
+		
+		card.show(f, "main");
+	}
+	
+
+}
