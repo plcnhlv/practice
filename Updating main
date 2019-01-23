@@ -1,3 +1,5 @@
+package test2;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -16,7 +18,7 @@ public class main {
 		
 		//Basic Settings start
 		TextArea View;
-		Button input,modify,delete,output,exit,confirm;
+		Button input,modify,delete,output,exit,confirm,listoutput;
 		f.setLayout(card);
 		f.addWindowListener(new EventHandler());
 		Panel card1 = new Panel();
@@ -25,6 +27,7 @@ public class main {
 		card3.add(new Label("Card 3"));
 		Panel card4 = new Panel();
 		card4.add(new Label("Card 4"));
+		Panel card5 = new Panel();
 		//Basic Settings end
 		
 		//main menu configure start
@@ -32,6 +35,7 @@ public class main {
 		f.add(card2,"input");
 		f.add(card3,"Modify");
 		f.add(card4,"Delete");
+		f.add(card5,"Output");
 		input=new Button("입력");
 		input.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
@@ -50,14 +54,20 @@ public class main {
 				card.show(f,"Delete");
 			}
 		});
+		output=new Button("출력");
+		output.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				card.show(f,"Output");
+			}
+		});
 		
 		card1.add(input);
 		card1.add(modify);
 		card1.add(delete);
+		card1.add(output);
 		//main menu configure end
 		
 		//input menu configure start
-		
 		
 		Label name=new Label("이름 :");
 		Label number=new Label("전화번호 :");
@@ -94,10 +104,9 @@ public class main {
 					list.add(Username1);
 					out.writeObject(Username1);
 					out.writeObject(list);
+					card.show(f, "main");
 					out.close();
 					i++;
-					
-					
 				}catch(IOException e1) {
 					e1.printStackTrace();
 				}
@@ -107,7 +116,7 @@ public class main {
 			}
 		});
 		card2.add(confirm);
-		card.show(f, "main");
+		
 	
 		//input menu configure end
 		
@@ -120,21 +129,38 @@ public class main {
 		//Modify menu configure end
 		
 		//Output menu configure start
-		try {
-			String fileName="UserInfo.ser";
-			FileInputStream fis = new FileInputStream(fileName);
-			BufferedInputStream bis = new BufferedInputStream(fis);
-			ObjectInputStream in = new ObjectInputStream(bis);
+		View=new TextArea(10,50);
+		card5.add(View);
+		listoutput=new Button("출력확인");
+		listoutput.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+			try {
+				String fileName="UserInfo.ser";
+				FileInputStream fis = new FileInputStream(fileName);
+				BufferedInputStream bis = new BufferedInputStream(fis);
+				ObjectInputStream in = new ObjectInputStream(bis);
 			
-			ArrayList list = (ArrayList)in.readObject();
-			//next day
-			System.out.println(list);
-			in.close();
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-	
+				ArrayList list = (ArrayList)in.readObject();
+				String[] temp = (String[]) list.toArray( new String[list.size()]);
+				for(int i=0;i<list.size();i++) {
+					if(i==0) {
+					View.setText(temp[i]);
+					continue;
+					}
+					View.setText(temp[i]);
+					if((i+1)%3==0) {
+						System.out.println("");
+					}
+				}
+				//System.out.println(list);
+				in.close();
+				}
+			catch(Exception e2) {
+			e2.printStackTrace();
+			}
+			}
+		});
+		card5.add(listoutput);
 		
 		//Output menu configure end
 		
