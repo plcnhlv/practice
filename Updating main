@@ -1,5 +1,3 @@
-package test2;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -10,15 +8,18 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class main {
+public class main implements Serializable{
 	public static void main(String[] args) {
 		final Frame f = new Frame("CardLayoutTest");
 		final CardLayout card = new CardLayout(10,10);
+		final int SizeNumber = 5;
 		//CardLayout Settings end
 		
 		//Basic Settings start
 		TextArea View;
-		Button input,modify,delete,output,exit,confirm,listoutput;
+		Button input,modify,delete,output,exit;
+		Button confirm,listoutput,inputExit;
+		Button deleteExit,deletebutton;
 		f.setLayout(card);
 		f.addWindowListener(new EventHandler());
 		Panel card1 = new Panel();
@@ -26,7 +27,6 @@ public class main {
 		Panel card3 = new Panel();
 		card3.add(new Label("Card 3"));
 		Panel card4 = new Panel();
-		card4.add(new Label("Card 4"));
 		Panel card5 = new Panel();
 		//Basic Settings end
 		
@@ -42,6 +42,7 @@ public class main {
 				card.show(f,"input");
 			}
 		});
+		
 		modify=new Button("수정");
 		modify.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
@@ -72,6 +73,8 @@ public class main {
 		Label name=new Label("이름 :");
 		Label number=new Label("전화번호 :");
 		Label memo=new Label("메모: ");
+		confirm=new Button("확인");
+		inputExit=new Button("돌아가기");
 		
 		TextField inputname=new TextField(10);
 		TextField inputnumber=new TextField(11);
@@ -83,14 +86,20 @@ public class main {
 		card2.add(inputnumber);
 		card2.add(memo);
 		card2.add(inputmemo);
-		confirm=new Button("확인");
+		
+		
+		inputExit.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e1) {
+				card.show(f,"main");
+			}	
+		});
+		ArrayList list=new ArrayList();
 		
 		confirm.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				String Pname=inputname.getText();
 				String Pnumber=inputnumber.getText();
 				String Pmemo=inputmemo.getText();
-				
 				try{
 					int i=0;
 					
@@ -98,15 +107,14 @@ public class main {
 					FileOutputStream fos = new FileOutputStream(filename);
 					BufferedOutputStream bos = new BufferedOutputStream(fos);
 					ObjectOutputStream out = new ObjectOutputStream(bos);
-					PeopleInfo Username1 =new PeopleInfo(Pname,Pnumber,Pmemo);
-					
-					ArrayList list=new ArrayList();
-					list.add(Username1);
-					out.writeObject(Username1);
-					out.writeObject(list);
-					card.show(f, "main");
-					out.close();
-					i++;
+					while(i<1) {
+						PeopleInfo Username1 =new PeopleInfo(Pname,Pnumber,Pmemo);
+						list.add(Username1);
+						out.writeObject(Username1);
+						out.writeObject(list);
+						out.close();
+						i++;
+					}
 				}catch(IOException e1) {
 					e1.printStackTrace();
 				}
@@ -116,17 +124,39 @@ public class main {
 			}
 		});
 		card2.add(confirm);
-		
-	
+		card2.add(inputExit);
 		//input menu configure end
-		
-		
 		
 		//Modify menu configure start
 		
 		
 		
 		//Modify menu configure end
+		
+		
+		//Delete menu configure start
+		Label guide = new Label("삭제할 객체의 번호를 입력하세요.");
+		TextField indexnumber =new TextField(3);
+		deleteExit=new Button("돌아가기");
+		deletebutton=new Button("삭제하기");
+		deleteExit.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e1) {
+				card.show(f,"main");
+			}	
+		});
+		String stringnumber = indexnumber.getText();
+		int listnumber = Integer.parseInt(stringnumber);
+		
+		card4.add(guide);
+		card4.add(indexnumber);
+		card4.add(deletebutton);
+		card4.add(deleteExit);
+		
+		
+		
+		
+		
+		//Delete menu configure end
 		
 		//Output menu configure start
 		View=new TextArea(10,50);
@@ -138,20 +168,13 @@ public class main {
 				String fileName="UserInfo.ser";
 				FileInputStream fis = new FileInputStream(fileName);
 				BufferedInputStream bis = new BufferedInputStream(fis);
+				
 				ObjectInputStream in = new ObjectInputStream(bis);
-			
-				ArrayList list = (ArrayList)in.readObject();
-				String[] temp = (String[]) list.toArray( new String[list.size()]);
-				for(int i=0;i<list.size();i++) {
-					if(i==0) {
-					View.setText(temp[i]);
-					continue;
-					}
-					View.setText(temp[i]);
-					if((i+1)%3==0) {
-						System.out.println("");
-					}
-				}
+				
+				PeopleInfo Username1=(PeopleInfo) in.readObject();
+				ArrayList list1 = (ArrayList)in.readObject();
+				
+				View.setText(list1.toString());
 				//System.out.println(list);
 				in.close();
 				}
