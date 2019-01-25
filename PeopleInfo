@@ -1,4 +1,6 @@
-public class PeopleInfo implements java.io.Serializable{
+import java.io.Serializable;
+
+public class PeopleInfo implements Serializable{
 	String name;
 	String PhoneNumber;
 	String memo;
@@ -14,7 +16,7 @@ public class PeopleInfo implements java.io.Serializable{
 		number++;
 	}
 	public String toString() {
-		return "("+name+","+"PhoneNumber"+","+memo+")";
+		return "("+name+","+PhoneNumber+","+memo+")";
 	}
 	public void dataset(int number) {
 		this.number=number;
