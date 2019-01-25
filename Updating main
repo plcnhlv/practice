@@ -14,6 +14,7 @@ public class main implements Serializable{
 		final Frame f = new Frame("CardLayoutTest");
 		final CardLayout card = new CardLayout(10,10);
 		final int SizeNumber = 5;
+		final String filename="UserInfo.ser";
 		//CardLayout Settings end
 		
 		//Basic Settings start
@@ -104,10 +105,10 @@ public class main implements Serializable{
 				try{
 					int i=0;
 					
-					String filename = "UserInfo.ser";
 					FileOutputStream fos = new FileOutputStream(filename);
 					BufferedOutputStream bos = new BufferedOutputStream(fos);
 					ObjectOutputStream out = new ObjectOutputStream(bos);
+					
 					while(i<1) {
 						PeopleInfo Username1 =new PeopleInfo(Pname,Pnumber,Pmemo);
 						list.add(Username1);
@@ -152,26 +153,39 @@ public class main implements Serializable{
 				try {
 					String stringnumber = indexnumber.getText();
 					int listnumber = Integer.parseInt(stringnumber,10);
-					String fileName="UserInfo.ser";
-					FileInputStream fis = new FileInputStream(fileName);
+					listnumber=listnumber-1;
+					ArrayList list2 = new ArrayList();
+					
+					FileInputStream fis = new FileInputStream(filename);
 					BufferedInputStream bis = new BufferedInputStream(fis);
 					ObjectInputStream in = new ObjectInputStream(bis);
 					
-					FileOutputStream fos = new FileOutputStream(fileName);
+					FileOutputStream fos = new FileOutputStream(filename);
 					BufferedOutputStream bos = new BufferedOutputStream(fos);
 					ObjectOutputStream out = new ObjectOutputStream(bos);
 					
-					ArrayList list2 = (ArrayList)in.readObject();
-					
+					PeopleInfo Username1=(PeopleInfo) in.readObject();
+					list2 = (ArrayList)in.readObject();
 					list2.remove(listnumber);
+					int ListSize=list2.size();
+					int i=0;
+					
+					while(i<ListSize) {
+						
+						ArrayList list3 = new ArrayList();
+						list3.add(list2.indexOf(i));
+						out.writeObject(Username1);
+						out.writeObject(list2);
+						
+						i++;
+					}
+					
+					out.close();
 					in.close();
 					
-					out.writeObject(list2);
-					out.close();
+					
 					
 					//System.out.println(list);
-					
-					
 					}
 				catch(Exception e2) {
 				e2.printStackTrace();
@@ -194,8 +208,7 @@ public class main implements Serializable{
 		listoutput.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 			try {
-				String fileName="UserInfo.ser";
-				FileInputStream fis = new FileInputStream(fileName);
+				FileInputStream fis = new FileInputStream(filename);
 				BufferedInputStream bis = new BufferedInputStream(fis);
 				
 				ObjectInputStream in = new ObjectInputStream(bis);
@@ -240,4 +253,3 @@ public class main implements Serializable{
 	
 
 }
-
