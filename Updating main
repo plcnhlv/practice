@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -135,25 +136,53 @@ public class main implements Serializable{
 		
 		
 		//Delete menu configure start
+		
 		Label guide = new Label("삭제할 객체의 번호를 입력하세요.");
 		TextField indexnumber =new TextField(3);
 		deleteExit=new Button("돌아가기");
-		deletebutton=new Button("삭제하기");
 		deleteExit.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e1) {
 				card.show(f,"main");
 			}	
 		});
-		String stringnumber = indexnumber.getText();
-		int listnumber = Integer.parseInt(stringnumber);
+		
+		deletebutton=new Button("삭제하기");
+		deletebutton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e1) {
+				try {
+					String stringnumber = indexnumber.getText();
+					int listnumber = Integer.parseInt(stringnumber,10);
+					String fileName="UserInfo.ser";
+					FileInputStream fis = new FileInputStream(fileName);
+					BufferedInputStream bis = new BufferedInputStream(fis);
+					ObjectInputStream in = new ObjectInputStream(bis);
+					
+					FileOutputStream fos = new FileOutputStream(fileName);
+					BufferedOutputStream bos = new BufferedOutputStream(fos);
+					ObjectOutputStream out = new ObjectOutputStream(bos);
+					
+					ArrayList list2 = (ArrayList)in.readObject();
+					
+					list2.remove(listnumber);
+					in.close();
+					
+					out.writeObject(list2);
+					out.close();
+					
+					//System.out.println(list);
+					
+					
+					}
+				catch(Exception e2) {
+				e2.printStackTrace();
+				}
+			}	
+		});
 		
 		card4.add(guide);
 		card4.add(indexnumber);
 		card4.add(deletebutton);
 		card4.add(deleteExit);
-		
-		
-		
 		
 		
 		//Delete menu configure end
@@ -211,3 +240,4 @@ public class main implements Serializable{
 	
 
 }
+
