@@ -22,14 +22,16 @@ public class main implements Serializable{
 		Button input,modify,delete,output,exit;
 		Button confirm,listoutput,inputExit;
 		Button deleteExit,deletebutton;
+		Button modifyconfirm,modifyprocess;
+		Button Back;
 		f.setLayout(card);
 		f.addWindowListener(new EventHandler());
 		Panel card1 = new Panel();
 		Panel card2 = new Panel();
 		Panel card3 = new Panel();
-		card3.add(new Label("Card 3"));
 		Panel card4 = new Panel();
 		Panel card5 = new Panel();
+		Panel card33 = new Panel();
 		//Basic Settings end
 		
 		//main menu configure start
@@ -38,6 +40,7 @@ public class main implements Serializable{
 		f.add(card3,"Modify");
 		f.add(card4,"Delete");
 		f.add(card5,"Output");
+		f.add(card33,"ModifyProcessing");
 		input=new Button("입력");
 		input.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
@@ -63,7 +66,12 @@ public class main implements Serializable{
 				card.show(f,"Output");
 			}
 		});
-		
+		Back=new Button("돌아가기");
+		Back.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				card.show(f,"main");
+			}
+		});
 		card1.add(input);
 		card1.add(modify);
 		card1.add(delete);
@@ -89,7 +97,6 @@ public class main implements Serializable{
 		card2.add(memo);
 		card2.add(inputmemo);
 		
-		
 		inputExit.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e1) {
 				card.show(f,"main");
@@ -109,14 +116,14 @@ public class main implements Serializable{
 					BufferedOutputStream bos = new BufferedOutputStream(fos);
 					ObjectOutputStream out = new ObjectOutputStream(bos);
 					
-					while(i<1) {
+					
 						PeopleInfo Username1 =new PeopleInfo(Pname,Pnumber,Pmemo);
 						list.add(Username1);
 						out.writeObject(Username1);
 						out.writeObject(list);
 						out.close();
 						i++;
-					}
+					
 				}catch(IOException e1) {
 					e1.printStackTrace();
 				}
@@ -130,7 +137,76 @@ public class main implements Serializable{
 		//input menu configure end
 		
 		//Modify menu configure start
+		Label modifyguide = new Label("수정할 객체의 번호를 입력하세요");
+		TextField modifyindex = new TextField(3);
+		Label modifyguide2 = new Label("수정할 객체의 속성을 입력해주세요");
+		TextField modifyproperty = new TextField(3);
+		modifyconfirm = new Button("확인");
+		modifyprocess = new Button("처리하기");
+		Label modifyname=new Label("이름");
+		TextField modifynametext = new TextField(10);
+		Label modifyPhoneNumber = new Label("전화번호");
+		TextField modifyPhoneNumbertext = new TextField(10);
+		Label modifymemo=new Label("메모");
+		TextField modifymemotext = new TextField(10);
 		
+		card3.add(modifyguide);
+		card3.add(modifyindex);
+		card3.add(modifyguide2);
+		card3.add(modifyproperty);
+		card3.add(modifyconfirm);
+		
+		card3.add(modifyname);
+		card3.add(modifynametext);
+		card3.add(modifyPhoneNumber);
+		card3.add(modifyPhoneNumbertext);
+		card3.add(modifymemo);
+		card3.add(modifymemotext);
+		card3.add(modifyprocess);
+		card3.add(Back);
+		modifyprocess.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				String newName ,newPhoneNumber, newMemo;
+				try {
+					int modifynumber = Integer.parseInt(modifyproperty.getText(),10);
+					int savenumber = modifynumber-1;
+					newName = modifynametext.getText();
+					newPhoneNumber = modifyPhoneNumbertext.getText();
+					newMemo = modifymemotext.getText();
+					PeopleInfo ModifyUser = new PeopleInfo(newName,newPhoneNumber,newMemo);
+					
+					ArrayList list2 = new ArrayList();
+					
+					FileInputStream fis = new FileInputStream(filename);
+					BufferedInputStream bis = new BufferedInputStream(fis);
+					ObjectInputStream in = new ObjectInputStream(bis);
+					
+					FileOutputStream fos = new FileOutputStream(filename);
+					BufferedOutputStream bos = new BufferedOutputStream(fos);
+					ObjectOutputStream out = new ObjectOutputStream(bos);
+					
+					PeopleInfo Username1=(PeopleInfo) in.readObject();
+					list2 = (ArrayList)in.readObject();
+					
+					list2.add(savenumber, ModifyUser);
+					list2.remove(modifynumber);
+					
+					out.writeObject(Username1);
+					out.writeObject(list2);
+					out.close();
+					in.close();
+					
+					//list2.remove(listnumber);
+				
+			
+			
+			
+			
+			}catch(Exception e4) {
+				e4.printStackTrace();
+			}
+			}
+		});
 		
 		
 		//Modify menu configure end
@@ -171,20 +247,14 @@ public class main implements Serializable{
 					int i=0;
 					
 					while(i<ListSize) {
-						
 						ArrayList list3 = new ArrayList();
 						list3.add(list2.indexOf(i));
 						out.writeObject(Username1);
-						out.writeObject(list2);
-						
+						out.writeObject(list2);	
 						i++;
 					}
-					
 					out.close();
 					in.close();
-					
-					
-					
 					//System.out.println(list);
 					}
 				catch(Exception e2) {
@@ -197,7 +267,6 @@ public class main implements Serializable{
 		card4.add(indexnumber);
 		card4.add(deletebutton);
 		card4.add(deleteExit);
-		
 		
 		//Delete menu configure end
 		
